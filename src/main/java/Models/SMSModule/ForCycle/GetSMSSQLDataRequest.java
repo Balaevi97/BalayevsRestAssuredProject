@@ -1,9 +1,9 @@
-package Models.SMSModule;
+package Models.SMSModule.ForCycle;
 
-public class GetSMSRequest {
-    public String PersonId;
-    public String TelNumber;
-    public String Consent;
+public class GetSMSSQLDataRequest {
+    public  String PersonId;
+    public  String TelNumber;
+    public  String Consent;
 
     public String getPersonId() {
         return PersonId;

@@ -1,4 +1,4 @@
-package Models.SMSModule;
+package Models.SMSModule.ForCycle;
 
 public class GetSMSResponse {
     public SMSModuleApiResponseData data;
