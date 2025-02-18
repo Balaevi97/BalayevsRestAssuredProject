@@ -1,4 +1,4 @@
-package Models.SMSModule;
+package Models.SMSModule.DataProvider;
 
 
 public class SMSModuleApiResponseData {

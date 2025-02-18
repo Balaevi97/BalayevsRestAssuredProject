@@ -1,16 +1,20 @@
 package DataController;
 
-import Models.SMSModule.ForCycle.GetSMSSQLDataRequest;
+import Models.SMSModule.DataProvider.GetSMSSQLDataRequest;
 import SQLDatabase.SQLDatabaseAccess;
+
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class DataControllerSMSModule {
+public class DataControllerSMSModuleForDataProvider {
 
     public static String queryGetNumbers = """
             USE SMSModuleDB
@@ -55,6 +59,29 @@ public class DataControllerSMSModule {
             getSMSRequestList.add(getSMSRequest);
         }
         return getSMSRequestList;
+    }
+
+
+    @DataProvider(name = "getSMSRObjects")
+    public static Object [][] getSMSRObjects () throws SQLException {
+        List<GetSMSSQLDataRequest> getSMSRequestList = getSMSRequestLists(DataControllerSMSModuleForDataProvider.queryGetNumbers);
+        Object[][] data = new Object[getSMSRequestList.size()][1];
+        for (int i = 0; i <getSMSRequestList.size() ; i++) {
+            data[i][0] = getSMSRequestList.get(i);
+        }
+        return data;
+    }
+
+    @DataProvider(name = "getSMSRObjectsIndividual")
+    public static Object [][] getSMSRObjectsIndividual () throws SQLException {
+        List<GetSMSSQLDataRequest> getSMSRequestList = getSMSRequestLists(DataControllerSMSModuleForDataProvider.queryGetNumbers);
+        Object[][] data = new Object[getSMSRequestList.size()][3];
+        for (int i = 0; i <getSMSRequestList.size() ; i++) {
+            data[i][0] = getSMSRequestList.get(i).getPersonId();
+            data[i][1] = getSMSRequestList.get(i).getTelNumber();
+            data[i][2] = getSMSRequestList.get(i).getConsent();
+        }
+        return data;
     }
 
 
