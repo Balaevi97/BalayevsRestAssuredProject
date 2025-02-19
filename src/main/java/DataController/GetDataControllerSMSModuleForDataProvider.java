@@ -1,20 +1,16 @@
 package DataController;
 
-import Models.SMSModule.DataProvider.GetSMSSQLDataRequest;
+import Models.SMSModule.DataProvider.Get.GetSMSDataRequest;
 import SQLDatabase.SQLDatabaseAccess;
-
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class DataControllerSMSModuleForDataProvider {
+public class GetDataControllerSMSModuleForDataProvider {
 
     public static String queryGetNumbers = """
             USE SMSModuleDB
@@ -42,17 +38,20 @@ public class DataControllerSMSModuleForDataProvider {
             
             """;
 
-    public static List<GetSMSSQLDataRequest> getSMSRequestLists (String query) throws SQLException {
+
+
+    /** ინფორმაციის წამოღება ბაზიდან **/
+
+    public static List<GetSMSDataRequest> getSMSRequestLists (String query) throws SQLException {
         ResultSet resultSet;
 
-
-        List<GetSMSSQLDataRequest> getSMSRequestList = new ArrayList<>();
+        List<GetSMSDataRequest> getSMSRequestList = new ArrayList<>();
         Connection databaseSQL = SQLDatabaseAccess.getConnectionSMSModule();
         PreparedStatement preparedStatement = databaseSQL.prepareStatement(query);
         resultSet = preparedStatement.executeQuery();
 
         while (resultSet.next()) {
-            GetSMSSQLDataRequest getSMSRequest = new GetSMSSQLDataRequest();
+            GetSMSDataRequest getSMSRequest = new GetSMSDataRequest();
             getSMSRequest.setPersonId(resultSet.getString("PersonId"));
             getSMSRequest.setTelNumber(resultSet.getString("TelNumber"));
             getSMSRequest.setConsent(resultSet.getString("Consent"));
@@ -61,10 +60,9 @@ public class DataControllerSMSModuleForDataProvider {
         return getSMSRequestList;
     }
 
+/** ბაზიდან წამოღებული ინფორმაციის შენახვა ობიექტებად **/
 
-    @DataProvider(name = "getSMSRObjects")
-    public static Object [][] getSMSRObjects () throws SQLException {
-        List<GetSMSSQLDataRequest> getSMSRequestList = getSMSRequestLists(DataControllerSMSModuleForDataProvider.queryGetNumbers);
+    public static Object [][] getSMSRObjects (List<GetSMSDataRequest> getSMSRequestList) {
         Object[][] data = new Object[getSMSRequestList.size()][1];
         for (int i = 0; i <getSMSRequestList.size() ; i++) {
             data[i][0] = getSMSRequestList.get(i);
@@ -72,9 +70,9 @@ public class DataControllerSMSModuleForDataProvider {
         return data;
     }
 
-    @DataProvider(name = "getSMSRObjectsIndividual")
-    public static Object [][] getSMSRObjectsIndividual () throws SQLException {
-        List<GetSMSSQLDataRequest> getSMSRequestList = getSMSRequestLists(DataControllerSMSModuleForDataProvider.queryGetNumbers);
+    /** ბაზიდან წამოღებული ინფორმაციის შენახვა თითოეული ელემენტად **/
+    public static Object [][] getSMSRObjectsIndividual (List<GetSMSDataRequest> getSMSRequestList) {
+
         Object[][] data = new Object[getSMSRequestList.size()][3];
         for (int i = 0; i <getSMSRequestList.size() ; i++) {
             data[i][0] = getSMSRequestList.get(i).getPersonId();
